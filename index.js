@@ -13,10 +13,11 @@ if (!command) {
 }
 
 const convertRules = {
-    png2webp: {from: '.png', toExt: '.webp', format: 'webp'},
-    jpg2png: {from: '.jpg', toExt: '.png', format: 'png'},
-    jpg2webp: {from: '.jpg', toExt: '.webp', format: 'webp'},
-    gif2webp: {from: '.gif', toExt: '.webp', format: 'webp'},
+    png2webp: {from: '.png', toExt: '.webp', format: 'webp', animation: false},
+    jpg2png: {from: '.jpg', toExt: '.png', format: 'png', animation: false},
+    jpg2webp: {from: '.jpg', toExt: '.webp', format: 'webp', animation: false},
+    gif2webp: {from: '.gif', toExt: '.webp', format: 'webp', animation: false},
+    gif2webpAnimation: {from: '.gif', toExt: '.webp', format: 'webp', animation: true},
 }
 
 const rule = convertRules[command]
@@ -27,7 +28,7 @@ if (!rule) {
 }
 
 const inputDir = './images'
-const outputDir = `./${rule.format}`
+const outputDir = `./output`
 
 if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir)
@@ -40,7 +41,7 @@ fs.readdirSync(inputDir).forEach(file => {
         const inputPath = path.join(inputDir, file)
         const outputPath = path.join(outputDir, file.replace(ext, rule.toExt))
 
-        sharp(inputPath)
+        sharp(inputPath,{animated: rule.animation})
             .toFormat(rule.format)
             .toFile(outputPath)
             .then(() => console.log(`✅ Converted: ${file} → ${path.basename(outputPath)}`))
